@@ -1,19 +1,24 @@
-function LRUCache(capacity) {
-  this.capacity = capacity;
-  this.cache = new Map();
-}
-LRUCache.prototype.get = function (key) {
-  if (!this.cache.has(key)) return -1;
-  const value = this.cache.get(key);
-  this.cache.delete(key);
-  this.cache.set(key, value);
-  return value;
-};
-LRUCache.prototype.put = function (key, value) {
-  if (this.cache.has(key)) this.cache.delete(key);
-  if (this.cache.size === this.capacity) {
-    const firstKey = this.cache.keys().next().value;
-    this.cache.delete(firstKey);
+function isMatch(s, p) {
+  const dp = Array.from(Array(s.length + 1), () =>
+    Array(p.length + 1).fill(false),
+  );
+  dp[0][0] = true;
+  for (let i = 1; i <= p.length; i++) {
+    if (p[i - 1] === "*") {
+      dp[0][i] = dp[0][i - 2];
+    }
   }
-  this.cache.set(key, value);
-};
+  for (let i = 1; i <= s.length; i++) {
+    for (let j = 1; j <= p.length; j++) {
+      if (s[i - 1] === p[j - 1] || p[j - 1] === ".") {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else if (p[j - 1] === "*") {
+        dp[i][j] = dp[i][j - 2];
+        if (p[j - 2] === "." || s[i - 1] === p[j - 2]) {
+          dp[i][j] = dp[i][j] || dp[i - 1][j];
+        }
+      }
+    }
+  }
+  return dp[s.length][p.length];
+}
