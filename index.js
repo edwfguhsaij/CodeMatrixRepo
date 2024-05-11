@@ -1,6 +1,4 @@
-const gcd = (a, b) => {
-  if (b === 0) {
-    return a;
-  }
-  return gcd(b, a % b);
+const dropWhile = (arr, func) => {
+  while (arr.length > 0 && !func(arr[0])) arr = arr.slice(1);
+  return arr;
 };
